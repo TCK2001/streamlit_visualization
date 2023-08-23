@@ -110,7 +110,7 @@ def MNIST():
         'What model do you want to try?',
         ('LeNet-5', 'AlexNet', 'CNN'))
     
-   @st.cache_resource
+    @st.cache_resource
     def load(MNIST_option):
         loaded_model = None
         
