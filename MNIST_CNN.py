@@ -105,7 +105,7 @@ class AlexNet(nn.Module):
         return x
 
 def MNIST():
-    
+    name = st.sidebar.selectbox('Model', ['MNIST', 'CIFAR-10', 'CIFAR-100', 'ImageNet'])
     MNIST_option = st.selectbox(
         'What model do you want to try?',
         ('LeNet-5', 'AlexNet', 'CNN'))
@@ -196,14 +196,8 @@ def MNIST():
     > https://tck2001.github.io/ \n'''
     st.write('TCK :', txt)
 
-def main():
-    name = st.sidebar.selectbox('Model', ['MNIST', 'CIFAR-10', 'CIFAR-100', 'ImageNet'])
-
-    if name == 'MNIST':
-        MNIST()
-
 if __name__ == "__main__":
-    main()
+    MNIST()
 
     
     
