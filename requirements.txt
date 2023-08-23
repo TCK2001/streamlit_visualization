@@ -4,5 +4,5 @@ streamlit-drawable-canvas
 torch
 torchvision
 ffmpeg 
-libgl1
+
 
