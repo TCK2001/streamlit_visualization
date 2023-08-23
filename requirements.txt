@@ -1,0 +1,7 @@
+streamlit
+opencv-python
+numpy
+time
+streamlit-drawable-canvas
+torch
+torchvision
