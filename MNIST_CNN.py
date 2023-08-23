@@ -2,6 +2,7 @@ import cv2
 import streamlit as st
 from torchvision import transforms
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 from streamlit_drawable_canvas import st_canvas
 import numpy as np
