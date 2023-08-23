@@ -110,24 +110,24 @@ def MNIST():
         'What model do you want to try?',
         ('LeNet-5', 'AlexNet', 'CNN'))
     
-    @st.cache_resource
+   @st.cache_resource
     def load(MNIST_option):
         loaded_model = None
         
         if MNIST_option == 'CNN':
             loaded_model = CNN()
-            loaded_model.load_state_dict(torch.load('./models/simplecnn.pth'))
+            loaded_model.load_state_dict(torch.load('./models/simplecnn.pth', map_location='cpu'))  # Load on CPU
             loaded_model.eval()
           
         elif MNIST_option == 'LeNet-5':
-            checkpoint = torch.load('./models/lenet5.pth')
             loaded_model = LeNet5()
+            checkpoint = torch.load('./models/lenet5.pth', map_location='cpu')  # Load on CPU
             loaded_model.load_state_dict(checkpoint['model_state_dict'])
             loaded_model.eval()
         
         else: 
             loaded_model = AlexNet()  
-            loaded_model.load_state_dict(torch.load('./models/alex.pth')) 
+            loaded_model.load_state_dict(torch.load('./models/alex.pth', map_location='cpu'))  # Load on CPU
             loaded_model.eval()
             
         st.success("Loaded model!", icon="✅")
@@ -135,12 +135,12 @@ def MNIST():
         return loaded_model
     
     def predict(model, image):
-        input_tensor = transforms.ToTensor()(image) # C H W
-        input_batch = input_tensor.unsqueeze(0) # B C H W
+        input_tensor = transforms.ToTensor()(image)  # C H W
+        input_batch = input_tensor.unsqueeze(0)  # B C H W
 
         with torch.no_grad():
-            output = model(input_batch)
-            
+            output = model(input_batch.cpu())  # Move the input to CPU
+    
             probabilities = torch.nn.functional.softmax(output[0], dim=0)
         return probabilities
     
