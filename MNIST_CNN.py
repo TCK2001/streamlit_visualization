@@ -196,7 +196,14 @@ def MNIST():
     > https://tck2001.github.io/ \n'''
     st.write('TCK :', txt)
 
+def main():
+    name = st.sidebar.selectbox('Model', ['MNIST', 'CIFAR-10', 'CIFAR-100', 'ImageNet'])
 
+    if name == 'MNIST':
+        MNIST()
+
+if __name__ == "__main__":
+    main()
 
     
     
