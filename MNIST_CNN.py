@@ -21,18 +21,18 @@ def MNIST():
         
         if MNIST_option == 'CNN':
             loaded_model = CNN()
-            loaded_model.load_state_dict(torch.load('C:/Users/TCK/Desktop/cv/streamlit/models/simplecnn.pth'))
+            loaded_model.load_state_dict(torch.load('./models/simplecnn.pth'))
             loaded_model.eval()
           
         elif MNIST_option == 'LeNet-5':
-            checkpoint = torch.load('C:/Users/TCK/Desktop/cv/streamlit/models/lenet5.pth')
+            checkpoint = torch.load('./models/lenet5.pth')
             loaded_model = LeNet5()
             loaded_model.load_state_dict(checkpoint['model_state_dict'])
             loaded_model.eval()
         
         else: 
             loaded_model = AlexNet()  
-            loaded_model.load_state_dict(torch.load('C:/Users/TCK/Desktop/cv/streamlit/models/alex.pth')) 
+            loaded_model.load_state_dict(torch.load('./models/alex.pth')) 
             loaded_model.eval()
             
         st.success("Loaded model!", icon="✅")
