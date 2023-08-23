@@ -3,3 +3,6 @@ numpy
 streamlit-drawable-canvas
 torch
 torchvision
+ffmpeg 
+libsm6 
+libxext6
