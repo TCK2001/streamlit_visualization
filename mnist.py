@@ -104,11 +104,53 @@ class AlexNet(nn.Module):
         x = self.fc8(x)  
         return x
 
+first_HL =8
+class Spinalnet(nn.Module):
+  def __init__(self):
+      super(Spinalnet, self).__init__()
+      self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
+      self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
+      self.conv2_drop = nn.Dropout()
+      self.fc1 = nn.Linear(160, first_HL) #changed from 16 to 8
+      self.fc1_1 = nn.Linear(160 + first_HL, first_HL) #added
+      self.fc1_2 = nn.Linear(160 + first_HL, first_HL) #added
+      self.fc1_3 = nn.Linear(160 + first_HL, first_HL) #added
+      self.fc1_4 = nn.Linear(160 + first_HL, first_HL) #added
+      self.fc1_5 = nn.Linear(160 + first_HL, first_HL) #added
+      self.fc2 = nn.Linear(first_HL*6, 10) # changed first_HL from second_HL
+
+  def forward(self, x):
+      x = F.relu(F.max_pool2d(self.conv1(x), 2))
+      x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+      x = x.view(-1, 320)
+
+      x1 = x[:, 0:160]
+      x1 = F.relu(self.fc1(x1))
+      x2= torch.cat([ x[:,160:320], x1], dim=1)
+      x2 = F.relu(self.fc1_1(x2))
+      x3= torch.cat([ x[:,0:160], x2], dim=1)
+      x3 = F.relu(self.fc1_2(x3))
+      x4= torch.cat([ x[:,160:320], x3], dim=1)
+      x4 = F.relu(self.fc1_3(x4))
+      x5= torch.cat([ x[:,0:160], x4], dim=1)
+      x5 = F.relu(self.fc1_4(x5))
+      x6= torch.cat([ x[:,160:320], x5], dim=1)
+      x6 = F.relu(self.fc1_5(x6))
+
+      x = torch.cat([x1, x2], dim=1)
+      x = torch.cat([x, x3], dim=1)
+      x = torch.cat([x, x4], dim=1)
+      x = torch.cat([x, x5], dim=1)
+      x = torch.cat([x, x6], dim=1)
+
+      x = self.fc2(x)
+      return F.log_softmax(x)
+
 def MNIST():
     name = st.sidebar.selectbox('Model', ['MNIST', 'CIFAR-10', 'CIFAR-100', 'ImageNet'])
     MNIST_option = st.selectbox(
         'What model do you want to try?',
-        ('LeNet-5', 'AlexNet', 'CNN'))
+        ('LeNet-5', 'AlexNet', 'CNN', 'SpinalNet'))
     
     @st.cache_resource
     def load(MNIST_option):
@@ -124,7 +166,12 @@ def MNIST():
             checkpoint = torch.load('lenet5.pth', map_location='cpu')  # Load on CPU
             loaded_model.load_state_dict(checkpoint['model_state_dict'])
             loaded_model.eval()
-        
+            
+        elif MNIST_option == 'SpinalNet':
+            loaded_model = Spinalnet()
+            loaded_model.load_state_dict(torch.load('spinalnet.pth', map_location='cpu'))
+            loaded_model.eval()
+            
         else: 
             loaded_model = AlexNet()  
             loaded_model.load_state_dict(torch.load('alex.pth', map_location='cpu'))  # Load on CPU
